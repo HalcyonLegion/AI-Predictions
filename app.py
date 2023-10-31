@@ -1,5 +1,15 @@
 from flask import Flask, request, render_template
 import requests
+import openai
+
+#This lets us read the API Key.
+def open_file(filepath):
+    with open(filepath, 'r') as infile:
+        return infile.read()
+
+def get_api_key(filename):
+    api_key = open_file(filename)
+    return api_key
 
 app = Flask(__name__)
 
@@ -13,7 +23,7 @@ def get_fixtures():
 
     fixture_url = "https://api-football-v1.p.rapidapi.com/v3/fixtures"
     headers = {
-        "X-RapidAPI-Key": "ef97436974msha2f90f1e83d332fp1e6007jsnc60c6c3cc314",
+        "X-RapidAPI-Key": get_api_key('xrapidapikey.txt'),
         "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com"
     }
     querystring = {"date": fixture_date, "league": "39", "season": "2023"}
@@ -39,7 +49,24 @@ def get_fixtures():
             advice = prediction_data["response"][0]["predictions"]["advice"]
             results.append((fixture_id, home_team, away_team, winner, advice))
 
-    return render_template("index.html", results=results)
+    message = f"""
+        The upcoming fixture between {home_team} and {away_team} 
+        (A fixture ID: {fixture_id}) has the following predictions:
+        The likely winner would be {winner} with a possibility of a draw.
+        Additional advice provided is: {advice}.
+        """
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are an insightful assistant who is able to analyse and make accurate predictions on Football scores based on the data provided."},
+            {"role": "user", "content": message}
+        ]
+    )
+
+    print(response['choices'][0]['message']['content'])
+
+    return render_template("index.html", results=results, gpt_output=gpt_output)
 
 if __name__ == '__main__':
     app.run(debug=True)
