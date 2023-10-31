@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Fixtures</title>
+</head>
+<body>
+    <h1>Football Fixtures</h1>
+    <form action="/get-fixtures" method="POST">
+        <label for="date">Fixture Date:</label><br>
+        <input type="date" id="date" name="date"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    
+    {% if fixtures %}
+        <h2>Fixtures:</h2>
+        {% for fixture in fixtures %}
+        <p>ID: {{ fixture[0] }} - Home: {{ fixture[1] }} - Away: {{ fixture[2] }}</p>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
