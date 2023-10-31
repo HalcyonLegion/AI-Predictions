@@ -34,9 +34,10 @@ def get_fixtures():
         prediction_response = requests.get(prediction_url, headers=headers, params=prediction_querystring)
         prediction_data = prediction_response.json()
 
-        if prediction_data.get("response"):  # Check to make sure there is a result
+        if prediction_data.get("response"):  
             winner = prediction_data["response"][0]["predictions"]["winner"]["name"]
-            results.append((fixture_id, home_team, away_team, winner))
+            advice = prediction_data["response"][0]["predictions"]["advice"]
+            results.append((fixture_id, home_team, away_team, winner, advice))
 
     return render_template("index.html", results=results)
 
