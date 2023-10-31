@@ -1,0 +1,9 @@
+.spinner-border {
+    display: none;
+    width: 3rem;
+    height: 3rem;
+}
+.card p {
+    font-size: 18px;
+    margin-bottom: 0.5rem;
+}

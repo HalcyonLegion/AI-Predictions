@@ -4,25 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Add Bootstrap CSS -->
+    <!-- Add Bootstrap & Custom CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link src="/Static/css/style.css" rel="stylesheet">
     
     <title>Football Fixtures</title>
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center py-4">Football Fixture Predictor!</h1>
+        <h1 class="text-center py-4 text-primary">Football Fixtures</h1>
         <form action="/get-fixtures" method="POST" class="py-3">
             <div class="form-group">
                 <label for="date">Fixture Date:</label><br>
                 <input type="date" id="date" name="date" class="form-control">
-                <br>
             </div>
-            <input type="submit" value="Submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary submitButton">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Submit
+            </button>
         </form>
         
         {% if fixtures %}
-            <h2 class="text-center py-3">Fixtures:</h2>
+            <h2 class="text-center py-3 text-success">Fixtures:</h2>
             <div class="row">
                 {% for fixture in fixtures %}
                 <div class="col-md-6 py-2">
@@ -36,27 +39,26 @@
             </div>
         {% endif %}
     
-        {% if results_and_outputs %}
-            <h2 class="text-center py-3">Fixture Predictions and AI Analysis:</h2>
+        {% if results %}
+            <h2 class="text-center py-3 text-warning">Fixture Predictions:</h2>
             <div class="row">
-                {% for result, gpt_output in results_and_outputs %}
+                {% for result in results %}
                 <div class="col-md-6 py-2">
                     <div class="card">
                         <div class="card-body">
                             <p>ID: {{ result[0] }} - Home: {{ result[1] }} - Away: {{ result[2] }} - Prediction: {{ result[3] }} - Advice: {{ result[4] }}</p>
-                            <p>{{ gpt_output }}</p>
                         </div>
                     </div>
-        <       </div>
+                </div>
                 {% endfor %}
             </div>
         {% endif %}
-
-    </div> <!-- END OF CONTAINER -->
-
+    </div>  <!-- END OF CONTAINER -->
+  
     <!-- Add Bootstrap JS and its dependencies jQuery and Popper.js -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="/Static/js/script.js"></script>
 </body>
 </html>
