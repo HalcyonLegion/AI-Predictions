@@ -19,5 +19,12 @@
         <p>ID: {{ fixture[0] }} - Home: {{ fixture[1] }} - Away: {{ fixture[2] }}</p>
         {% endfor %}
     {% endif %}
+
+    {% if results %}
+        <h2>Fixture Predictions:</h2>
+        {% for result in results %}
+        <p>ID: {{ result[0] }} - Home: {{ result[1] }} - Away: {{ result[2] }} - Prediction: {{ result[3] }}</p>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
