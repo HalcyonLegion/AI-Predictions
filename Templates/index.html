@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center py-4">Football Fixtures</h1>
+        <h1 class="text-center py-4">Football Fixture Predictor!</h1>
         <form action="/get-fixtures" method="POST" class="py-3">
             <div class="form-group">
                 <label for="date">Fixture Date:</label><br>
@@ -36,27 +36,24 @@
             </div>
         {% endif %}
     
-        {% if results %}
-            <h2 class="text-center py-3">Fixture Predictions:</h2>
+        {% if results_and_outputs %}
+            <h2 class="text-center py-3">Fixture Predictions and AI Analysis:</h2>
             <div class="row">
-                {% for result in results %}
+                {% for result, gpt_output in results_and_outputs %}
                 <div class="col-md-6 py-2">
                     <div class="card">
                         <div class="card-body">
                             <p>ID: {{ result[0] }} - Home: {{ result[1] }} - Away: {{ result[2] }} - Prediction: {{ result[3] }} - Advice: {{ result[4] }}</p>
+                            <p>{{ gpt_output }}</p>
                         </div>
                     </div>
-                </div>
+        <       </div>
                 {% endfor %}
             </div>
         {% endif %}
-    </div>
 
-    {% if gpt_output %}
-   <h2>AI Analysis:</h2>
-   <p>{{ gpt_output }}</p>
-    {% endif %}
-  
+    </div> <!-- END OF CONTAINER -->
+
     <!-- Add Bootstrap JS and its dependencies jQuery and Popper.js -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

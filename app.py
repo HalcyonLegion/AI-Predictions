@@ -11,6 +11,8 @@ def get_api_key(filename):
     api_key = open_file(filename)
     return api_key
 
+openai.api_key = get_api_key('openaiapikey.txt')
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -33,21 +35,22 @@ def get_fixtures():
     fixture_ids = [(match["fixture"]["id"], match["teams"]["home"]["name"], match["teams"]["away"]["name"]) for match in fixture_data["response"]]
 
     results = []
+    gpt_outputs = []
     for fixture in fixture_ids:
         fixture_id = fixture[0]
         home_team = fixture[1]
         away_team = fixture[2]
 
-        prediction_url = "https://api-football-v1.p.rapidapi.com/v3/predictions"
-        prediction_querystring = {"fixture": fixture_id}
+    prediction_url = "https://api-football-v1.p.rapidapi.com/v3/predictions"
+    prediction_querystring = {"fixture": fixture_id}
 	
-        prediction_response = requests.get(prediction_url, headers=headers, params=prediction_querystring)
-        prediction_data = prediction_response.json()
+    prediction_response = requests.get(prediction_url, headers=headers, params=prediction_querystring)
+    prediction_data = prediction_response.json()
 
-        if prediction_data.get("response"):  
-            winner = prediction_data["response"][0]["predictions"]["winner"]["name"]
-            advice = prediction_data["response"][0]["predictions"]["advice"]
-            results.append((fixture_id, home_team, away_team, winner, advice))
+    if prediction_data.get("response"):  
+        winner = prediction_data["response"][0]["predictions"]["winner"]["name"]
+        advice = prediction_data["response"][0]["predictions"]["advice"]
+        results.append((fixture_id, home_team, away_team, winner, advice))
 
     message = f"""
         The upcoming fixture between {home_team} and {away_team} 
@@ -59,14 +62,14 @@ def get_fixtures():
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are an insightful assistant who is able to analyse and make accurate predictions on Football scores based on the data provided."},
+            {"role": "system", "content": "You are an insightful assistant who is able to analyse and make accurate predictions on Football scores based on the data provided. Please try your best to provide a full-time score."},
             {"role": "user", "content": message}
         ]
     )
 
-    print(response['choices'][0]['message']['content'])
+    gpt_outputs.append(response['choices'][0]['message']['content'])
 
-    return render_template("index.html", results=results, gpt_output=gpt_output)
+    return render_template("index.html", results_and_outputs=zip(results, gpt_outputs))
 
 if __name__ == '__main__':
     app.run(debug=True)
