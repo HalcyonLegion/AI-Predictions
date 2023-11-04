@@ -46,8 +46,10 @@ def get_fixtures():
 
         if prediction_data.get("response"):  
             winner = prediction_data["response"][0]["predictions"]["winner"]["name"]
+            goalsHome = prediction_data["response"][0]["predictions"]["goals"]["home"]
+            goalsAway = prediction_data["response"][0]["predictions"]["goals"]["away"]
             advice = prediction_data["response"][0]["predictions"]["advice"]
-            results.append((fixture_id, home_team, away_team, winner, advice))
+            results.append((fixture_id, home_team, away_team, winner, goalsHome, goalsAway, advice))
 
     return render_template("index.html", results=results)
 
