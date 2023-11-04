@@ -23,7 +23,8 @@
                 <input type="date" id="date" name="date" class="form-control">
             </div>
             <button type="submit" class="btn btn-primary submitButton">
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="spinner-border spinner-border-sm" role="status" 
+      aria-hidden="true" style='display: none;'></span>
                 Submit
             </button>
         </form>
@@ -44,25 +45,37 @@
         {% endif %}
     
         {% if results %}
-            <h2 class="text-center py-3 text-warning">Fixture Predictions:</h2>
-            <div class="row">
-                {% for result in results %}
-                <div class="col-md-6 py-2">
-                    <div class="card">
-                        <div class="card-body">
-                            <p>ID: {{ result[0] }} - Home: {{ result[1] }} - Away: {{ result[2] }} - Prediction: {{ result[3] }} - Home Goals: {{ result[4] }} - Away Goals: {{ result[5] }} - Advice: {{ result[6] }}</p>
-                        </div>
+    
+        <h2 class="text-center py-3 text-warning">Fixture Predictions:</h2>
+        
+        <div class="row">
+            {% for result in results %}
+            <div class="col-md-6 py-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">ID: {{ result[0] }}</h5>
+                        <p class="card-text">
+                            <strong>Home:</strong> {{ result[1] }}<br>
+                            <strong>Away:</strong> {{ result[2] }}<br>
+                            <strong>Prediction:</strong> {{ result[3] }}<br>
+                            <strong>Home Goals:</strong> {{ result[4] }}<br>
+                            <strong>Away Goals:</strong> {{ result[5] }}<br>
+                            <strong>Advice:</strong> {{ result[6] }}<br>
+                            <strong>AI Analysis:</strong> {{ result[7] }}
+                        </p>
                     </div>
                 </div>
-                {% endfor %}
             </div>
-        {% endif %}
+            {% endfor %}
+        </div>
+        
+    {% endif %}
     </div>  <!-- END OF CONTAINER -->
   
     <!-- Add Bootstrap JS and its dependencies jQuery and Popper.js -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="/static/js/script.js"></script>
+    <!-- <script src="/static/js/script.js"></script> -->
 </body>
 </html>

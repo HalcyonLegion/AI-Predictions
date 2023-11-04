@@ -7,3 +7,14 @@
     font-size: 18px;
     margin-bottom: 0.5rem;
 }
+.card-title{
+    font-size: 20px;
+    color: #017BFF;
+    font-weight: bold;
+}
+.card-text{
+    font-size: 16px;
+}
+.card-text strong{
+    color: #FF8800;
+}
