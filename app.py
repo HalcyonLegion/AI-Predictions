@@ -13,17 +13,6 @@ def get_api_key(filename):
 
 app = Flask(__name__)
 
-def get_chatgpt_analysis(prediction):
-   openai.api_key = get_api_key('openaiapikey.txt')
-   response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "system", "content": "You are an expert in sentiment analysis and will be able to objectively analyse football match predictions and give your own input on the prediction."},
-        {"role": "user", "content": prediction}
-    ]
-)
-   return response.choices[0].text.strip()
-
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -57,11 +46,10 @@ def get_fixtures():
 
         if prediction_data.get("response"):  
             winner = prediction_data["response"][0]["predictions"]["winner"]["name"]
-            analysis = get_chatgpt_analysis(winner)
             goalsHome = prediction_data["response"][0]["predictions"]["goals"]["home"]
             goalsAway = prediction_data["response"][0]["predictions"]["goals"]["away"]
             advice = prediction_data["response"][0]["predictions"]["advice"]
-            results.append((fixture_id, home_team, away_team, winner, goalsHome, goalsAway, advice, analysis))
+            results.append((fixture_id, home_team, away_team, winner, goalsHome, goalsAway, advice))
 
     return render_template("index.html", results=results)
 
