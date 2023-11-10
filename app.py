@@ -1,6 +1,7 @@
 import logging
 from flask import Flask, request, render_template
 import requests
+import json
 import openai
 
 logging.basicConfig(level=logging.DEBUG)
@@ -57,7 +58,9 @@ def get_fixtures():
 
         if prediction_data.get("response"):  
             winner = prediction_data["response"][0]["predictions"]["winner"]["name"]
-            analysis = get_chatgpt_analysis(winner)
+            ai_context = prediction_data["response"][0]["predictions"]
+            ai_context2 = prediction_data["response"][0]["teams"]
+            analysis = get_chatgpt_analysis(ai_context, ai_context2)
             goalsHome = prediction_data["response"][0]["predictions"]["goals"]["home"]
             goalsAway = prediction_data["response"][0]["predictions"]["goals"]["away"]
             advice = prediction_data["response"][0]["predictions"]["advice"]
@@ -65,18 +68,33 @@ def get_fixtures():
 
     return render_template("index.html", results=results)
 
-def get_chatgpt_analysis(prediction):
-    logging.info('Sending sentiment analysis request to GPT-3.')
+def get_chatgpt_analysis(prediction, team):
+    logging.info('Sending sentiment analysis request to GPT-4')
     openai.api_key = get_api_key('openaiapikey.txt')
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+    
+    # Extract relevant data from prediction
+    winner_name = prediction['winner']['name']
+    win_or_draw = prediction['winner']['comment']
+    home_goals = prediction['goals']['home']
+    away_goals = prediction['goals']['away']
+    advice = prediction['advice']
+    home_record = team['home']['league']['form']
+    away_record = team['away']['league']['form']
+    
+    # Construct user message
+    user_message = f"The prediction suggests that {winner_name} will win or draw: {win_or_draw} . \
+                    The goals prediction is: home team: {home_goals}, away team: {away_goals}. \
+                    The given advice is: {advice}. This is the home team's league record: {home_record} vs the away team's league record: {away_record}. What is your take on this?"
+
+    completion = openai.chat.completions.create(
+        model="gpt-4-1106-preview",
         messages=[
-            {"role": "system", "content": "You are an expert in sentiment analysis and will be able to objectively analyse football match predictions and give your own input on the prediction."},
-            {"role": "user", "content": prediction}
+            {"role": "system", "content": "You are an expert in statistical and sentimental analysis and will be able to objectively analyse football match predictions and give your own input on the prediction. Keep it short and to the point."},
+            {"role": "user", "content": user_message}
         ]
     )
     logging.info('Sentiment analysis response received.')
-    return response['choices'][0]['message']['content'].strip() # Corrected line
+    return completion.choices[0].message.content.strip()
 
 if __name__ == '__main__':
     logging.info('App starting.')
