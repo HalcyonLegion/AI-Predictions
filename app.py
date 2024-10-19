@@ -82,7 +82,7 @@ def get_chatgpt_analysis(prediction, team):
     away_record = team['away']['league']['form']
     
     # Construct user message
-    user_message = f"The prediction suggests that {winner_name} will win or draw: {win_or_draw} . \
+    user_message = f"The prediction suggests that {winner_name} will: {win_or_draw} . \
                     The goals prediction is: home team: {home_goals}, away team: {away_goals}. \
                     The given advice is: {advice}. This is the home team's league record: {home_record} vs the away team's league record: {away_record}. What is your take on this?"
 
