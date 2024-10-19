@@ -35,7 +35,7 @@ def get_fixtures():
         "X-RapidAPI-Key": get_api_key('xrapidapikey.txt'),
         "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com"
     }
-    querystring = {"date": fixture_date, "league": "39", "season": "2023"}
+    querystring = {"date": fixture_date, "league": "39", "season": "2024"}
     logging.info('Sending request to fetch fixture data.')
     fixture_response = requests.get(fixture_url, headers=headers, params=querystring)
     fixture_data = fixture_response.json()
@@ -87,7 +87,7 @@ def get_chatgpt_analysis(prediction, team):
                     The given advice is: {advice}. This is the home team's league record: {home_record} vs the away team's league record: {away_record}. What is your take on this?"
 
     completion = openai.chat.completions.create(
-        model="gpt-4-1106-preview",
+        model="chatgpt-4o-latest",
         messages=[
             {"role": "system", "content": "You are an expert in statistical and sentimental analysis and will be able to objectively analyse football match predictions and give your own input on the prediction. Keep it short and to the point."},
             {"role": "user", "content": user_message}
